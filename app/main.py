@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
 from .routers import tickets
+from .config import settings
 
 app = FastAPI()
 
