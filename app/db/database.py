@@ -5,6 +5,9 @@ from sqlalchemy.orm import sessionmaker
 from ..config import settings
 
 SQLALCHEMY_DATABASE_URL = settings.database_url
+if SQLALCHEMY_DATABASE_URL.startswith("postgres://"):
+    SQLALCHEMY_DATABASE_URL.replace("postgres://", "postgresql://")
+
 #SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
 
 engine = create_engine(
