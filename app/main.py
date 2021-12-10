@@ -1,8 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from sqlalchemy.orm import Session
 
 from .routers import tickets
+from .config import settings
+from .db.database import get_db
 
-app = FastAPI()
+app = FastAPI(dependencies=[Depends(get_db)])
 
 app.include_router(tickets.router)
 
