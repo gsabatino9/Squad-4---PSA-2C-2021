@@ -14,43 +14,30 @@ class Ticket(Base):
     __tablename__ = "tickets"
 
     id = Column(Integer, primary_key=True, index=True)
-    id_producto = Column(Integer, ForeignKey("productos.id"))
-    id_version = Column(Integer, ForeignKey("productos.id_version"))
-    id_empleado = Column(Integer)
-    tittle = Column(String)
+    product_id = Column(Integer, ForeignKey("productos.id"))
+    product_version = Column(Integer, ForeignKey("productos.version"))
+    employee_id = Column(Integer)
+    title = Column(String)
     description = Column(String)
     created_at = Column(DateTime, server_default=func.now())
     deleted_at = Column(DateTime, nullable=True)
-    tipo = Column(String)
-    severidad = Column(Integer)
-    estado = Column(String)
-    horas_dedicadas = Column(Integer, nullable= True)
-    clientes = relationship("Cliente", secondary= reclamos,back_populates = "tickets")
+    ticket_type = Column(String)
+    severity = Column(Integer)
+    state = Column(String)
+    dedicated_hours = Column(Integer, nullable=True)
 
-class Producto(Base):
-    __tablename__ = "productos"
-
+class Product(Base):
+    __tablename__ = "products"
 
     id = Column(Integer, primary_key=True, index=True)
-    id_version = Column(Integer, primary_key=True, index=True)
-    nombre_producto = Column(String)
-    version = Column(Integer)
+    version = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
+    created_at = Column(DateTime, server_default=func.now())
 
-
-
-class Cliente(Base):
-    __tablename__ = "clientes"
-
-    id = Column(Integer, primary_key=True, index=True)
-    razon_social = Column(String)
-    cuit = Column(String)
-    tickets = relationship("Ticket",secondary = reclamos, back_populates = "clientes")
 
 class Resolucion(Base):
     __tablename__ = "resoluciones"
+
     id = Column(Integer, primary_key=True, index=True)
     ticket_id = Column(Integer, ForeignKey("tickets.id"))
     tarea_id = Column(Integer)
-
-
-
