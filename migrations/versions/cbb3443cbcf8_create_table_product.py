@@ -27,6 +27,8 @@ def upgrade():
         sa.Column('created_at', sa.DateTime, server_default=func.now()),
     )
 
+    op.create_unique_constraint('pk_products_name_version', 'products', ['name', 'version'])
+
     for i in range(5):
         for name in PRODUCTS_NAMES:
             op.execute("INSERT INTO products(name, version) VALUES ('{}', {})".format(name, i))

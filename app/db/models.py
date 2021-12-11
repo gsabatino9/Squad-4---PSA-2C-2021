@@ -14,8 +14,7 @@ class Ticket(Base):
     __tablename__ = "tickets"
 
     id = Column(Integer, primary_key=True, index=True)
-    product_id = Column(Integer, ForeignKey("productos.id"))
-    product_version = Column(Integer, ForeignKey("productos.version"))
+    product_id = Column(Integer, ForeignKey("products.id"))
     employee_id = Column(Integer)
     title = Column(String)
     description = Column(String)
@@ -30,7 +29,7 @@ class Product(Base):
     __tablename__ = "products"
 
     id = Column(Integer, primary_key=True, index=True)
-    version = Column(Integer, primary_key=True, index=True)
+    version = Column(Integer)
     name = Column(String)
     created_at = Column(DateTime, server_default=func.now())
 
