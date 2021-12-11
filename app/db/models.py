@@ -6,11 +6,6 @@ from sqlalchemy.sql import func
 from .database import Base
 
 
-reclamos = Table("reclamos", Base.metadata,
-                       Column("numero_cliente", ForeignKey("clientes.id"), primary_key=True),
-                       Column("ticket_id", ForeignKey("tickets.id"), primary_key=True))
-
-
 class TicketState(str, enum.Enum):
     OPEN =  "OPEN"
     IN_PROGRESS = "IN_PROGRESS"
@@ -37,7 +32,10 @@ class Ticket(Base):
     state = Column(Enum(TicketState))
     dedicated_hours = Column(Integer, nullable=True)
     
-    product = relationship("Product", back_populates="ticket")
+    product = relationship("Product", back_populates="tickets")
+    resolutions = relationship("Resolution", back_populates="tickets")
+    claims = relationship("Claim", back_populates="tickets")
+
 
 class Product(Base):
     __tablename__ = "products"
@@ -47,14 +45,23 @@ class Product(Base):
     name = Column(String)
     created_at = Column(DateTime, server_default=func.now())
 
-    ticket = relationship("Ticket", back_populates="product")
+    tickets = relationship("Ticket", back_populates="product")
 
-
-
-
-class Resolucion(Base):
-    __tablename__ = "resoluciones"
+class Resolution(Base):
+    __tablename__ = "resolutions"
 
     id = Column(Integer, primary_key=True, index=True)
     ticket_id = Column(Integer, ForeignKey("tickets.id"))
-    tarea_id = Column(Integer)
+    task_id = Column(Integer)
+
+    tickets = relationship("Ticket", back_populates="resolutions")
+
+class Claim(Base):
+    __tablename__ = "claims"
+
+    id = Column(Integer, primary_key=True, index=True)
+    ticket_id = Column(Integer, ForeignKey("tickets.id"))
+    client_id = Column(Integer)
+    
+    tickets = relationship("Ticket", back_populates="claims")
+
