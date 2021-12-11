@@ -13,14 +13,14 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-@router.get("/", response_model=List[schemas.Ticket])
+@router.get("/", response_model=List[schemas.TicketOut])
 async def get_tickets(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return crud.get_tickets(db, skip, limit)
 
-@router.post("/", response_model=schemas.Ticket)
+@router.post("/", response_model=schemas.TicketOut)
 async def create_ticket(ticket: schemas.TicketCreate, db: Session = Depends(get_db)):
     return crud.create_ticket(db, ticket)
 
-@router.get("/{ticket_id}")
-async def read_item(ticket_id: str):
-    return "Esto es un ticket con id" + ticket_id
+@router.get("/{ticket_id}", response_model=schemas.TicketOut)
+async def read_item(ticket_id: int, db: Session = Depends(get_db)):
+    return crud.get_ticket(db, ticket_id)

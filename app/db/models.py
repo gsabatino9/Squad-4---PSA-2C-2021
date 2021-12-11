@@ -1,4 +1,5 @@
-from sqlalchemy import Boolean, Column, DateTime, Integer, String, ForeignKey, Table
+import enum
+from sqlalchemy import Boolean, Column, DateTime, Integer, String, ForeignKey, Table, Enum
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
@@ -10,6 +11,17 @@ reclamos = Table("reclamos", Base.metadata,
                        Column("ticket_id", ForeignKey("tickets.id"), primary_key=True))
 
 
+class TicketState(str, enum.Enum):
+    OPEN =  "OPEN"
+    IN_PROGRESS = "IN_PROGRESS"
+    WAITING_DEVELOP = "WAITING_DEVELOP"
+    WAITING_CLIENT = "WAITING_CLIENT"
+    CLOSE = "CLOSE"
+
+class TicketType(str, enum.Enum):
+    BUG = "BUG"
+    QUERY = "QUERY"
+
 class Ticket(Base):
     __tablename__ = "tickets"
 
@@ -20,10 +32,12 @@ class Ticket(Base):
     description = Column(String)
     created_at = Column(DateTime, server_default=func.now())
     deleted_at = Column(DateTime, nullable=True)
-    ticket_type = Column(String)
+    ticket_type = Column(Enum(TicketType))
     severity = Column(Integer)
-    state = Column(String)
+    state = Column(Enum(TicketState))
     dedicated_hours = Column(Integer, nullable=True)
+    
+    product = relationship("Product", back_populates="ticket")
 
 class Product(Base):
     __tablename__ = "products"
@@ -32,6 +46,10 @@ class Product(Base):
     version = Column(Integer)
     name = Column(String)
     created_at = Column(DateTime, server_default=func.now())
+
+    ticket = relationship("Ticket", back_populates="product")
+
+
 
 
 class Resolucion(Base):
