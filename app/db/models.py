@@ -1,9 +1,12 @@
 import enum
+import requests
 from sqlalchemy import Boolean, Column, DateTime, Integer, String, ForeignKey, Table, Enum
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+from sqlalchemy.ext.hybrid import hybrid_property
 
 from .database import Base
+from ..config import settings
 
 
 class TicketState(str, enum.Enum):
@@ -35,6 +38,15 @@ class Ticket(Base):
     product = relationship("Product", back_populates="tickets")
     resolutions = relationship("Resolution", back_populates="tickets")
     claims = relationship("Claim", back_populates="tickets")
+
+    @hybrid_property
+    def clients(self):
+        clientsResponse = requests.get(settings.clients_url)
+        clients_mapped = list(map(lambda client: {**client, 'razon_social': client['razon social']}, clientsResponse.json()))
+        clients_id = list(map(lambda claim: claim.client_id, self.claims))
+        clients = list(filter(lambda client: client['id'] in clients_id, clients_mapped))
+        return clients
+
 
 
 class Product(Base):

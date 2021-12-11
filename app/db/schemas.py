@@ -13,6 +13,11 @@ class Product(BaseModel):
     class Config:
         orm_mode = True
 
+class Client(BaseModel):
+    id: int
+    CUIT: str
+    razon_social: str
+
 class TicketCreate(BaseModel):
     title: str
     description: str
@@ -21,6 +26,15 @@ class TicketCreate(BaseModel):
     severity: int
     employee_id: int
     state: TicketState = TicketState.OPEN
+
+class TicketUpdate(BaseModel):
+    title: Optional[str]
+    description: Optional[str]
+    product_id: Optional[int]
+    ticket_type: Optional[TicketType]
+    severity: Optional[int]
+    employee_id: Optional[int]
+    state: Optional[TicketState]
 
 class Ticket(TicketCreate):
     id: int
@@ -36,3 +50,5 @@ class Ticket(TicketCreate):
 
 class TicketOut(Ticket):
     product: Product
+    clients: Optional[List[Client]]
+

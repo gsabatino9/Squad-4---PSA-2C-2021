@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from typing import List, Optional
 
 from . import models, schemas
 
@@ -12,9 +13,21 @@ def get_tickets(db: Session, skip: int = 0, limit: int = 100):
 
 
 def create_ticket(db: Session, ticket: schemas.TicketCreate):
-    db_ticket = models.Ticket(title=ticket.title, description=ticket.description, product_id=ticket.product_id,
-                              employee_id=ticket.employee_id, ticket_type=ticket.ticket_type, severity=ticket.severity, state=ticket.state)
+    db_ticket = models.Ticket(**ticket)
     db.add(db_ticket)
     db.commit()
     db.refresh(db_ticket)
+    return db_ticket
+
+def update_ticket(db: Session, ticket_id: int, ticket_update: schemas.TicketUpdate):
+    db.query(models.Ticket).filter(models.Ticket.id==ticket_id).update(ticket_update)
+    db.commit()
+    db_ticket = db.query(models.Ticket).filter(models.Ticket.id==ticket_id).first()
+    return db_ticket
+
+def update_claims(db: Session, ticket_id: int, clients_id: List[int]):
+    db.query(models.Claim).filter(models.Claim.ticket_id==ticket_id).delete()
+    db.add_all(map(lambda client_id: models.Claim(ticket_id=ticket_id, client_id=client_id), clients_id))
+    db.commit()
+    db_ticket = db.query(models.Ticket).filter(models.Ticket.id==ticket_id).first()
     return db_ticket
