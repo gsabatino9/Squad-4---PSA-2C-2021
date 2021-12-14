@@ -3,16 +3,52 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-class TicketCreate(BaseModel):
-    tittle: str
-    description: str
+from ..db.models import TicketState, TicketType
 
-class Ticket(TicketCreate):
+class Product(BaseModel):
     id: int
-    tittle: str
-    description: str
-    created_at: datetime
-    deleted_at: datetime = None
+    name: str
+    version: int
 
     class Config:
         orm_mode = True
+
+class Client(BaseModel):
+    id: int
+    CUIT: str
+    razon_social: str
+
+class TicketCreate(BaseModel):
+    title: str
+    description: str
+    product_id: int
+    ticket_type: TicketType
+    severity: int
+    employee_id: int
+    state: TicketState = TicketState.OPEN
+
+class TicketUpdate(BaseModel):
+    title: Optional[str]
+    description: Optional[str]
+    product_id: Optional[int]
+    ticket_type: Optional[TicketType]
+    severity: Optional[int]
+    employee_id: Optional[int]
+    state: Optional[TicketState]
+
+class Ticket(TicketCreate):
+    id: int
+    employee_id: int
+    created_at: datetime
+    deleted_at: Optional[datetime]
+    state: TicketState
+    dedicated_hours: Optional[int]
+
+    class Config:
+        orm_mode = True
+
+
+class TicketOut(Ticket):
+    product: Product
+    clients: Optional[List[Client]]
+
