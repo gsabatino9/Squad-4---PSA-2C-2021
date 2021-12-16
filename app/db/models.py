@@ -46,6 +46,29 @@ class Ticket(Base):
         clients_id = list(map(lambda claim: claim.client_id, self.claims))
         clients = list(filter(lambda client: client['id'] in clients_id, clients_mapped))
         return clients
+    
+    @hybrid_property
+    def tasks(self):
+        tasks = []
+        for resolution in self.resolutions:
+            task = requests.get(settings.tickets_url.format(resolution.task_id)).json()['results']
+            if len(task) == 0:
+                continue
+            tasks.append(task[0])
+        return tasks
+
+    @hybrid_property
+    def employee(self):
+        if(self.employee_id == None):
+            return None
+        payload = {'ids': [self.employee_id]}
+        employee = requests.get(settings.employee_url.format(self.employee_id), data=payload).json()
+        if len(employee['data']) == 0:
+            return None
+        return employee['data'][0]
+        
+
+
 
 
 

@@ -33,6 +33,10 @@ async def update_title(ticket_id: int, title: str, db: Session = Depends(get_db)
 async def update_clients(ticket_id: int, clients: List[int], db: Session = Depends(get_db)):
     return crud.update_claims(db, ticket_id, clients)
 
+@router.put("/{ticket_id}/tasks", response_model=schemas.TicketOut)
+async def update_clients(ticket_id: int, tasks: List[int], db: Session = Depends(get_db)):
+    return crud.update_tasks(db, ticket_id, tasks)
+
 @router.put("/{ticket_id}", response_model=schemas.TicketOut)
 async def update_ticket(ticket_id: int, ticket: schemas.TicketUpdate, db: Session = Depends(get_db)):
     ticketFiltered = {k: v for k, v in ticket.dict().items() if v is not None}
