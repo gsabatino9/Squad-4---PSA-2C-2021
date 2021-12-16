@@ -38,3 +38,7 @@ def update_tasks(db: Session, ticket_id: int, tasks_id: List[int]):
     db.commit()
     db_ticket = db.query(models.Ticket).filter(models.Ticket.id==ticket_id).first()
     return db_ticket
+
+def get_products(db: Session):
+    db_products = db.query(models.Product).all()
+    return db_products
