@@ -13,6 +13,18 @@ class Product(BaseModel):
     class Config:
         orm_mode = True
 
+class Task(BaseModel):
+    id: int
+    name: str
+    description: str
+    state: str
+    id_project: int
+
+class Employee(BaseModel):
+    id: int
+    name: str
+    last_name: str
+
 class Client(BaseModel):
     id: int
     CUIT: str
@@ -51,4 +63,6 @@ class Ticket(TicketCreate):
 class TicketOut(Ticket):
     product: Product
     clients: Optional[List[Client]]
+    tasks: Optional[List[Task]]
+    employee: Optional[Employee]
 
