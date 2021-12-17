@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
+
 from .routers import tickets, products
 from .config import settings
 from .db.database import get_db
