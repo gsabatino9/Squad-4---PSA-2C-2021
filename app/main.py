@@ -9,8 +9,8 @@ from .db.database import get_db
 app = FastAPI(dependencies=[Depends(get_db)])
 
 origins = [
-    "https://squad4-tickets.herokuapp.com/",
-    "http://localhost:8080",
+    "http://localhost:3001",
+    "http://localhost:3000",
 ]
 
 app.add_middleware(
