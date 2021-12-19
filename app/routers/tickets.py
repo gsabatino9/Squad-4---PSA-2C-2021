@@ -39,5 +39,4 @@ async def update_tasks(ticket_id: int, tasks: List[int], db: Session = Depends(g
 
 @router.put("/{ticket_id}", response_model=schemas.TicketOut)
 async def update_ticket(ticket_id: int, ticket: schemas.TicketUpdate, db: Session = Depends(get_db)):
-    ticketFiltered = {k: v for k, v in ticket.dict().items() if v is not None}
-    return crud.update_ticket(db, ticket_id, ticketFiltered)
+    return crud.update_ticket(db, ticket_id, ticket.dict(exclude_unset=True))
