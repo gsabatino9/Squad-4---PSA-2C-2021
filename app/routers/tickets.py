@@ -34,7 +34,7 @@ async def update_clients(ticket_id: int, clients: List[int], db: Session = Depen
     return crud.update_claims(db, ticket_id, clients)
 
 @router.put("/{ticket_id}/tasks", response_model=schemas.TicketOut)
-async def update_clients(ticket_id: int, tasks: List[int], db: Session = Depends(get_db)):
+async def update_tasks(ticket_id: int, tasks: List[int], db: Session = Depends(get_db)):
     return crud.update_tasks(db, ticket_id, tasks)
 
 @router.put("/{ticket_id}", response_model=schemas.TicketOut)
