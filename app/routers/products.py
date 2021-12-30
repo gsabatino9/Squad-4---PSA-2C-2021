@@ -14,5 +14,5 @@ router = APIRouter(
 )
 
 @router.get("/", response_model=List[schemas.Product])
-async def get_tickets(db: Session = Depends(get_db)):
+async def get_products(db: Session = Depends(get_db)):
     return crud.get_products(db)

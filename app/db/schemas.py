@@ -36,8 +36,8 @@ class TicketCreate(BaseModel):
     product_id: int
     ticket_type: TicketType
     severity: int
-    employee_id: int
-    state: TicketState = TicketState.OPEN
+    employee_id: Optional[int]
+    state: Optional[TicketState] = TicketState.OPEN
 
 class TicketUpdate(BaseModel):
     title: Optional[str]
@@ -50,7 +50,6 @@ class TicketUpdate(BaseModel):
 
 class Ticket(TicketCreate):
     id: int
-    employee_id: int
     created_at: datetime
     deleted_at: Optional[datetime]
     state: TicketState

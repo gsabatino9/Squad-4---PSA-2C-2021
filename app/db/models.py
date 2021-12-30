@@ -62,10 +62,11 @@ class Ticket(Base):
         if(self.employee_id == None):
             return None
         payload = {'ids': [self.employee_id]}
-        employee = requests.get(settings.employee_url.format(self.employee_id), data=payload).json()
-        if len(employee['data']) == 0:
+        employees = requests.get(settings.employee_url.format(self.employee_id), data=payload).json()
+        if len(employees['data']) == 0:
             return None
-        return employee['data'][0]
+        employee = list(filter(lambda e: e['id'] == self.employee_id, employees['data']))
+        return employee[0] if len(employee) > 0 else None
         
 
 
