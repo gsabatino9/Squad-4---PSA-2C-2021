@@ -11,6 +11,7 @@ app = FastAPI(dependencies=[Depends(get_db)])
 origins = [
     "http://localhost:3001",
     "http://localhost:3000",
+    "https://zen-meninsky-88deba.netlify.app/"
 ]
 
 app.add_middleware(
